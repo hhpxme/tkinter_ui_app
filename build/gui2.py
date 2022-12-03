@@ -102,15 +102,25 @@ button_login = Button(
     relief="flat"
 )
 button_image_logout = PhotoImage(
-    file=relative_to_assets("button_login.png"))
+    file=relative_to_assets("button_logout.png"))
 button_logout = Button(
     master=window,
-    image=button_image_login,
+    image=button_image_logout,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print('log out'),
+    command=lambda: logout_account(),
     relief="flat",
 )
+
+
+def logout_account():
+    q = messagebox.askokcancel('Logout', 'Do you want to logout ?')
+    if q:
+        login_flag.set(False)
+        login_show()
+        delete_all_video()
+    else:
+        pass
 
 
 def login_show():
@@ -131,9 +141,9 @@ def login_show():
 
 def logout_show():
     button_logout.place(
-        x=1260.0,
+        x=1370.0,
         y=18.0,
-        width=150.0,
+        width=40.0,
         height=40.0
     )
     button_login.place_forget()
@@ -514,12 +524,16 @@ treeview.config(yscrollcommand=scroll_bar.set)
 scroll_bar.config(command=treeview.yview)
 
 
+def delete_all_video():
+    for item in treeview.get_children():
+        treeview.delete(item)
+
+
 def get_video():
     if login_flag.get():
         video_data = get_link.get_video_data()
         i = 0
-        for item in treeview.get_children():
-            treeview.delete(item)
+        delete_all_video()
         for data in video_data:
             treeview.insert('', END, values=data)
             if i >= 1000:
@@ -624,8 +638,7 @@ entry_dentry_end.place(
 
 def date_filter():
     if login_flag.get():
-        for item in treeview.get_children():
-            treeview.delete(item)
+        delete_all_video()
 
         d_start = entry_dentry_start.get_date()
         d_end = entry_dentry_end.get_date()
