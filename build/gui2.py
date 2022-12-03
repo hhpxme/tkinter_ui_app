@@ -11,7 +11,7 @@ import get_link
 import account
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"Y:\untitled_2\build\assets\frame2")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame2")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -27,9 +27,8 @@ window.resizable(False, False)
 
 # Variable
 login_flag = BooleanVar(value=False)
-notification_flag = BooleanVar(value=False)
 
-link_root = 'https://firebasestorage.googleapis.com/v0/b/upload-video-536b1.appspot.com/o/'
+link_root = 'https://firebasestorage.googleapis.com/v0/b/videodetect-ae8df.appspot.com/o/'
 
 canvas = Canvas(
     window,
@@ -81,386 +80,204 @@ canvas.create_text(
 )
 
 
-# Button Register
-def register_toplevel():
-    toplevel = Toplevel(window)
-    toplevel.geometry("460x280")
-    toplevel.configure(bg="#FFFFFF")
-    toplevel.resizable(False, False)
-
-    em_var = StringVar(master=toplevel)
-    pw_var = StringVar(master=toplevel)
-    rpw_var = StringVar(master=toplevel)
-    c_var = IntVar(master=toplevel)
-    code = IntVar(master=toplevel)
-
-    cv = Canvas(
-        toplevel,
-        bg="#FFFFFF",
-        height=280,
-        width=460,
-        bd=0,
-        highlightthickness=0,
-        relief="ridge"
-    )
-
-    cv.place(x=0, y=0)
-    cv.create_text(
-        71.0,
-        12.0,
-        anchor="nw",
-        text="Register a new account",
-        fill="#000000",
-        font=("InriaSans Regular", 32 * -1)
-    )
-
-    cv.create_text(
-        20.0,
-        75.0,
-        anchor="nw",
-        text="Email:",
-        fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
-    )
-
-    cv.create_text(
-        20.0,
-        115.0,
-        anchor="nw",
-        text="Password:",
-        fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
-    )
-
-    cv.create_text(
-        20.0,
-        155.0,
-        anchor="nw",
-        text="Re-password:",
-        fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
-    )
-
-    cv.create_text(
-        20.0,
-        195.0,
-        anchor="nw",
-        text="Verification Code:",
-        fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
-    )
-
-    entry_email = Entry(
-        master=toplevel,
-        bd=1,
-        bg="#FFFFFF",
-        fg="#000716",
-        highlightthickness=1,
-        highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1)
-    )
-    entry_email.place(
-        x=80.0,
-        y=72.5,
-        width=350.0,
-        height=28.0
-    )
-    entry_password = Entry(
-        master=toplevel,
-        bd=1,
-        bg="#FFFFFF",
-        fg="#000716",
-        highlightthickness=1,
-        highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1)
-    )
-    entry_password.place(
-        x=115.0,
-        y=112.5,
-        width=315.0,
-        height=28.0
-    )
-    entry_repassword = Entry(
-        master=toplevel,
-        bd=1,
-        bg="#FFFFFF",
-        fg="#000716",
-        highlightthickness=1,
-        highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1)
-    )
-    entry_repassword.place(
-        x=145.0,
-        y=152.5,
-        width=285.0,
-        height=28.0
-    )
-    entry_code = Entry(
-        master=toplevel,
-        bd=1,
-        bg="#FFFFFF",
-        fg="#000716",
-        highlightthickness=1,
-        highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1)
-    )
-    entry_code.place(
-        x=180.0,
-        y=192.5,
-        width=155.0,
-        height=28.0,
-    )
-
-    def sendcode_press():
-        if em_var.get() == '':
-            messagebox.showerror(
-                "Error",
-                "Email cannot be blank!"
-            )
-        else:
-            messagebox.showinfo(
-                "Information",
-                "Verification code have been send to your email.\nChecking email and input your code in here."
-            )
-            code.set(account.send_code(em_var.get()))
-            print(code.get())
-
-    button_sendcode = Button(
-        master=toplevel,
-        text='send code',
-        bg="#FFFFFF",
-        borderwidth=2,
-        highlightthickness=2,
-        highlightcolor="#9CD0FA",
-        command=lambda: sendcode_press(),
-        relief='raised',
-        font=("InriaSans Regular", 14 * -1)
-    )
-    button_sendcode.place(
-        x=345.0,
-        y=191.0,
-        width=85.0,
-        height=30.0
-    )
-
-    def submit_press():
-        # Validation input
-        if em_var == '' or pw_var == '':
-            messagebox.showerror(
-                "Error",
-                "Email and Password cannot be blank!"
-            )
-        elif rpw_var == '':
-            messagebox.showerror(
-                "Error",
-                "Please input password again in re-password"
-            )
-        elif c_var == '':
-            messagebox.showerror(
-                "Error",
-                "Verification code have been send to your email.\nChecking email and input your code in here."
-            )
-        elif em_var != '' and pw_var != '' and rpw_var != '' and c_var != '':
-            e = em_var.get()
-            p = pw_var.get()
-            rpw = rpw_var.get()
-            c = c_var.get()
-            if rpw != p:
-                messagebox.showerror(
-                    "Error",
-                    "Re-password is wrong.\nPlease checking again."
-                )
-            else:
-                if c == code.get():
-                    flag = account.register(e, p)
-                    # if register success then destroy toplevel
-                    if flag:
-                        messagebox.showinfo("Information", "Register Successfully")
-                        toplevel.destroy()
-                    else:
-                        messagebox.showinfo("Information", "Register Failed, Please again!")
-                        toplevel.destroy()
-                else:
-                    messagebox.showerror(
-                        "Error",
-                        "Verification code is wrong.\nChecking email and input your code in here."
-                    )
-
-    button_submit = Button(
-        master=toplevel,
-        text='submit',
-        bg="#FFFFFF",
-        borderwidth=2,
-        highlightthickness=2,
-        highlightcolor="#9CD0FA",
-        command=lambda: submit_press(),
-        relief='raised',
-        font=("InriaSans Regular", 16 * -1)
-    )
-    button_submit.place(
-        x=193.0,
-        y=235.0,
-        width=75.0,
-        height=30.0
-    )
-
-
+# Login State
 button_image_register = PhotoImage(
     file=relative_to_assets("button_register.png"))
 button_register = Button(
+    master=window,
     image=button_image_register,
     borderwidth=0,
     highlightthickness=0,
     command=lambda: register_toplevel(),
     relief="flat"
 )
-button_register.place(
-    x=1260.0,
-    y=18.0,
-    width=150.0,
-    height=40.0
+button_image_login = PhotoImage(
+    file=relative_to_assets("button_login.png"))
+button_login = Button(
+    master=window,
+    image=button_image_login,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: login_toplevel(),
+    relief="flat"
+)
+button_image_logout = PhotoImage(
+    file=relative_to_assets("button_login.png"))
+button_logout = Button(
+    master=window,
+    image=button_image_login,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: print('log out'),
+    relief="flat",
 )
 
 
-# Button Login
-def login_toplevel():
+def login_show():
+    button_register.place(
+        x=1260.0,
+        y=18.0,
+        width=150.0,
+        height=40.0
+    )
+    button_login.place(
+        x=1100.0,
+        y=18.0,
+        width=150.0,
+        height=40.0
+    )
+    button_logout.place_forget()
+
+
+def logout_show():
+    button_logout.place(
+        x=1260.0,
+        y=18.0,
+        width=150.0,
+        height=40.0
+    )
+    button_login.place_forget()
+    button_register.place_forget()
+
+
+if login_flag.get():
+    logout_show()
+else:
+    login_show()
+
+
+# Button Register
+def register_toplevel():
     toplevel = Toplevel(window)
-    toplevel.geometry("460x240")
+    toplevel.geometry("640x520")
     toplevel.configure(bg="#FFFFFF")
     toplevel.resizable(False, False)
 
     em_var = StringVar(master=toplevel)
     pw_var = StringVar(master=toplevel)
-    c_var = IntVar(master=toplevel)
-    code = IntVar(master=toplevel)
+    cpw_var = StringVar(master=toplevel)
 
     cv = Canvas(
         toplevel,
         bg="#FFFFFF",
-        height=240,
-        width=460,
+        width=640,
+        height=520,
         bd=0,
         highlightthickness=0,
         relief="ridge"
     )
 
     cv.place(x=0, y=0)
-    cv.create_text(
-        71.0,
-        12.0,
-        anchor="nw",
-        text="Login",
-        fill="#000000",
-        font=("InriaSans Regular", 32 * -1)
+    cv.create_rectangle(
+        0.0,
+        0.0,
+        640.0,
+        100.0,
+        fill="#D9D9D9",
+        outline=""
+    )
+    cv.create_rectangle(
+        1.5,
+        100.0,
+        638.5,
+        518.5,
+        fill="#FFFFFF",
+        outline="#F88077",
+        width=3
     )
 
     cv.create_text(
-        20.0,
-        75.0,
+        45.0,
+        10.0,
+        anchor="nw",
+        text="Register",
+        fill="#000000",
+        font=("InriaSans Regular", 48 * -1)
+    )
+    cv.create_text(
+        45.0,
+        65.0,
+        anchor="nw",
+        text="You need an account to use the application",
+        fill="#000000",
+        font=("InriaSans Regular", 16 * -1)
+    )
+
+    cv.create_text(
+        45.0,
+        125.0,
         anchor="nw",
         text="Email:",
         fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
+        font=("InriaSans Regular", 24 * -1)
     )
 
     cv.create_text(
-        20.0,
-        115.0,
+        45.0,
+        225.0,
         anchor="nw",
         text="Password:",
         fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
+        font=("InriaSans Regular", 24 * -1)
     )
 
     cv.create_text(
-        20.0,
-        155.0,
+        45.0,
+        325.0,
         anchor="nw",
-        text="Verification Code:",
+        text="Confirm Password:",
         fill="#000000",
-        font=("InriaSans Regular", 20 * -1)
+        font=("InriaSans Regular", 24 * -1)
     )
 
     entry_email = Entry(
         master=toplevel,
-        bd=1,
+        bd=2,
         bg="#FFFFFF",
         fg="#000716",
-        highlightthickness=1,
+        highlightthickness=2,
         highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1),
+        font=("InriaSans Regular", 24 * -1),
         textvariable=em_var
     )
     entry_email.place(
-        x=80.0,
-        y=72.5,
-        width=350.0,
-        height=28.0
+        x=45.0,
+        y=160.0,
+        width=550.0,
+        height=50.0
     )
     entry_password = Entry(
         master=toplevel,
-        bd=1,
+        bd=2,
         bg="#FFFFFF",
         fg="#000716",
-        highlightthickness=1,
+        highlightthickness=2,
         highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1),
+        font=("InriaSans Regular", 24 * -1),
         show='*',
         textvariable=pw_var
     )
     entry_password.place(
-        x=115.0,
-        y=112.5,
-        width=315.0,
-        height=28.0
+        x=45.0,
+        y=260.0,
+        width=550.0,
+        height=50.0
     )
-    entry_code = Entry(
+    entry_repassword = Entry(
         master=toplevel,
-        bd=1,
+        bd=2,
         bg="#FFFFFF",
         fg="#000716",
-        highlightthickness=1,
-        highlightcolor="#9CD0FA",
-        font=("InriaSans Regular", 20 * -1),
-        textvariable=c_var
-    )
-    entry_code.place(
-        x=180.0,
-        y=152.5,
-        width=155.0,
-        height=28.0,
-    )
-
-    def sendcode_press():
-        if em_var.get() == '' or pw_var.get() == '':
-            messagebox.showerror(
-                "Error",
-                "Email and Password cannot be blank!"
-            )
-        else:
-            messagebox.showinfo(
-                "Information",
-                "Verification code have been send to your email.\nChecking email and input your code in here."
-            )
-            code.set(account.send_code(em_var.get()))
-            print(code.get())
-
-    button_sendcode = Button(
-        master=toplevel,
-        text='send code',
-        bg="#FFFFFF",
-        borderwidth=2,
         highlightthickness=2,
         highlightcolor="#9CD0FA",
-        command=lambda: sendcode_press(),
-        relief='raised',
-        font=("InriaSans Regular", 16 * -1)
+        font=("InriaSans Regular", 24 * -1),
+        textvariable=cpw_var
     )
-    button_sendcode.place(
-        x=345.0,
-        y=151.0,
-        width=85.0,
-        height=30.0
+    entry_repassword.place(
+        x=45.0,
+        y=360,
+        width=550.0,
+        height=50.0
     )
 
     def submit_press():
@@ -470,71 +287,212 @@ def login_toplevel():
                 "Error",
                 "Email and Password cannot be blank!"
             )
-        elif c_var == '':
+        elif str(em_var.get()).find('@gmail.com') == -1:
             messagebox.showerror(
                 "Error",
-                "Verification code have been send to your email.\nChecking email and input your code in here."
+                "Type of Email is wrong!"
             )
-        elif em_var != '' and pw_var != '' and c_var != '':
+        elif cpw_var == '':
+            messagebox.showerror(
+                "Error",
+                "Please input password again in re-password"
+            )
+        elif em_var != '' and pw_var != '' and cpw_var != '':
             e = em_var.get()
             p = pw_var.get()
-            c = c_var.get()
-            if str(c) == str(code.get()):
-                flag = account.login(e, p)
-                # if login success then destroy toplevel and delete button login, register
-                if flag:
-                    messagebox.showinfo("Information", "Login Successfully")
-                    toplevel.destroy()
-                    canvas.delete(button_image_register)
-                    canvas.delete(button_image_register)
-                    canvas.delete(button_register)
-                    canvas.delete(button_login)
-                else:
-                    messagebox.showinfo("Information", "Login Failed, Please again!")
-                    toplevel.destroy()
-            else:
+            cpw = cpw_var.get()
+            if cpw != p:
                 messagebox.showerror(
                     "Error",
-                    "Verification code is wrong.\nChecking email and input your code in here."
+                    "Confirm-password is wrong.\nPlease checking again."
                 )
+            else:
+                try:
+                    account.register(e, p)
+                    messagebox.showwarning("Information", "A link has been sent to your email\nPlease check your email and verified your account\nIf after 15 days, account was not verified. Account is deleted")
+                    messagebox.showinfo("Information", "Register Successfully")
+                    toplevel.destroy()
+                except:
+                    messagebox.showinfo("Information", "Register Failed")
 
     button_submit = Button(
         master=toplevel,
-        text='submit',
+        text='Submit',
         bg="#FFFFFF",
         borderwidth=2,
         highlightthickness=2,
         highlightcolor="#9CD0FA",
         command=lambda: submit_press(),
         relief='raised',
-        font=("InriaSans Regular", 16 * -1)
+        font=("InriaSans Regular", 28 * -1)
     )
     button_submit.place(
-        x=193.0,
-        y=195.0,
-        width=75.0,
-        height=30.0
+        x=220.0,
+        y=440.0,
+        width=200.0,
+        height=40.0
     )
 
 
-button_image_login = PhotoImage(
-    file=relative_to_assets("button_login.png"))
-button_login = Button(
-    image=button_image_login,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: login_toplevel(),
-    relief="flat"
-)
-button_login.place(
-    x=1100.0,
-    y=18.0,
-    width=150.0,
-    height=40.0
-)
+# Button Login
+def login_toplevel():
+    toplevel = Toplevel(window)
+    toplevel.geometry("640x360")
+    toplevel.configure(bg="#FFFFFF")
+    toplevel.resizable(False, False)
+
+    em_var = StringVar(master=toplevel)
+    pw_var = StringVar(master=toplevel)
+
+    cv = Canvas(
+        toplevel,
+        bg="#FFFFFF",
+        width=640,
+        height=360,
+        bd=0,
+        highlightthickness=0,
+        relief="ridge"
+    )
+
+    cv.place(x=0, y=0)
+    cv.create_rectangle(
+        0.0,
+        0.0,
+        640.0,
+        100.0,
+        fill="#9CD0FA",
+        outline=""
+    )
+    cv.create_rectangle(
+        0.0,
+        100.0,
+        638.5,
+        358.5,
+        fill="#FFFFFF",
+        outline="#F88077",
+        width=3
+    )
+
+    cv.create_text(
+        45.0,
+        10.0,
+        anchor="nw",
+        text="Welcome",
+        fill="#000000",
+        font=("InriaSans Regular", 48 * -1)
+    )
+    cv.create_text(
+        45.0,
+        65.0,
+        anchor="nw",
+        text="Login to continue your work",
+        fill="#000000",
+        font=("InriaSans Regular", 16 * -1)
+    )
+
+    cv.create_text(
+        45.0,
+        145.0,
+        anchor="nw",
+        text="Email:",
+        fill="#000000",
+        font=("InriaSans Regular", 36 * -1)
+    )
+
+    cv.create_text(
+        45.0,
+        215.0,
+        anchor="nw",
+        text="Password:",
+        fill="#000000",
+        font=("InriaSans Regular", 36 * -1)
+    )
+
+    entry_email = Entry(
+        master=toplevel,
+        bd=2,
+        bg="#FFFFFF",
+        fg="#000716",
+        highlightthickness=2,
+        highlightcolor="#9CD0FA",
+        font=("InriaSans Regular", 24 * -1),
+        textvariable=em_var
+    )
+    entry_email.place(
+        x=245.0,
+        y=140.0,
+        width=350.0,
+        height=50.0
+    )
+    entry_password = Entry(
+        master=toplevel,
+        bd=2,
+        bg="#FFFFFF",
+        fg="#000716",
+        highlightthickness=2,
+        highlightcolor="#9CD0FA",
+        font=("InriaSans Regular", 24 * -1),
+        show='*',
+        textvariable=pw_var
+    )
+    entry_password.place(
+        x=245.0,
+        y=210.0,
+        width=350.0,
+        height=50.0
+    )
+
+    def submit_press():
+        # Validation input
+        if em_var == '' or pw_var == '':
+            messagebox.showerror(
+                "Error",
+                "Email and Password cannot be blank!"
+            )
+        elif str(em_var.get()).find('@gmail.com') == -1:
+            messagebox.showerror(
+                "Error",
+                "Type email is wrong!"
+            )
+        else:
+            e = em_var.get()
+            p = pw_var.get()
+            flag = account.login(e, p)
+            # if login success then destroy toplevel and delete button login, register
+            if flag >= 0:
+                messagebox.showinfo("Information", "Login Successfully")
+                login_flag.set(True)
+                toplevel.destroy()
+                logout_show()
+                get_video()
+            elif flag == -2:
+                messagebox.showwarning("Verified Request", )
+            elif flag == -1:
+                messagebox.showinfo("Information", "Login Failed, Please again!")
+                login_flag.set(False)
+                toplevel.destroy()
+
+    button_submit = Button(
+        master=toplevel,
+        text='Submit',
+        bg="#FFFFFF",
+        borderwidth=2,
+        highlightthickness=2,
+        highlightcolor="#9CD0FA",
+        command=lambda: submit_press(),
+        relief='raised',
+        font=("InriaSans Regular", 28 * -1)
+    )
+    button_submit.place(
+        x=220,
+        y=287.0,
+        width=200.0,
+        height=40.0
+    )
+
 
 # Listbox link video    30.0, 175.0, 1410.0, 950.0
-treeview_columns = ('name', 'date_created')
+treeview_columns = ('name', 'date_created', 'ip')
 treeview = Treeview(
     window,
     columns=treeview_columns,
@@ -542,17 +500,7 @@ treeview = Treeview(
 )
 treeview.heading('name', text='Name')
 treeview.heading('date_created', text='Date Created')
-
-video_data = get_link.get_video_data()
-i = 0
-# for name in file_name:
-#     print(name)
-for data in video_data:
-    treeview.insert('', END, values=data)
-    if i >= 1000:
-        i = 0
-        break
-
+treeview.heading('ip', text='From IP')
 treeview.place(
     x=32.5,
     y=177.5,
@@ -564,6 +512,20 @@ scroll_bar = Scrollbar(treeview)
 scroll_bar.pack(side=RIGHT, fill=BOTH, pady=1)
 treeview.config(yscrollcommand=scroll_bar.set)
 scroll_bar.config(command=treeview.yview)
+
+
+def get_video():
+    if login_flag.get():
+        video_data = get_link.get_video_data()
+        i = 0
+        for item in treeview.get_children():
+            treeview.delete(item)
+        for data in video_data:
+            treeview.insert('', END, values=data)
+            if i >= 1000:
+                break
+    else:
+        pass
 
 
 def select_press():
@@ -591,26 +553,13 @@ button_select.place(
 )
 
 
-# Button show full list video
-def show_press():
-    for item in treeview.get_children():
-        treeview.delete(item)
-
-    v_data = get_link.get_video_data()
-    c = 0
-    for d in v_data:
-        treeview.insert('', END, values=d)
-        if c >= 1000:
-            break
-
-
 button_image_show = PhotoImage(
     file=relative_to_assets("button_show.png"))
 button_show = Button(
     image=button_image_show,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: show_press(),
+    command=lambda: get_video(),
     relief="flat"
 )
 button_show.place(
@@ -674,20 +623,23 @@ entry_dentry_end.place(
 
 
 def date_filter():
-    for item in treeview.get_children():
-        treeview.delete(item)
+    if login_flag.get():
+        for item in treeview.get_children():
+            treeview.delete(item)
 
-    d_start = entry_dentry_start.get_date()
-    d_end = entry_dentry_end.get_date()
+        d_start = entry_dentry_start.get_date()
+        d_end = entry_dentry_end.get_date()
 
-    v_data = get_link.get_video_data()
-    c = 0
-    for n, d in v_data:
-        date_data = str(d).split('-')
-        if int(d_start.day) <= int(date_data[2]) <= int(d_end.day) and int(d_start.month) <= int(date_data[1]) <= int(d_end.month) and int(d_start.year) <= int(date_data[0]) <= int(d_end.year):
-            treeview.insert('', END, values=[n, d])
-            if c >= 1000:
-                break
+        v_data = get_link.get_video_data()
+        c = 0
+        for n, d in v_data:
+            date_data = str(d).split('-')
+            if int(d_start.day) <= int(date_data[2]) <= int(d_end.day) and int(d_start.month) <= int(date_data[1]) <= int(d_end.month) and int(d_start.year) <= int(date_data[0]) <= int(d_end.year):
+                treeview.insert('', END, values=[n, d])
+                if c >= 1000:
+                    break
+    else:
+        pass
 
 
 # Button OK

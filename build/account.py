@@ -5,6 +5,9 @@ import random
 from email.message import EmailMessage
 
 
+list_admin = ['hhpxme@gmail.com']
+
+
 def email_sending(subject, body, to):
     msg = EmailMessage()
     msg.set_content(body)
@@ -26,37 +29,25 @@ def email_sending(subject, body, to):
 auth = firebase_config.firebase.auth()
 
 
-def send_code(email):
-    code = random.randint(100000, 999999)
-
-    # create and send verified code to email
-    subject = "Email verification"
-    body = f"The code to verification your email is: {code}"
-    if email == '':
-        return -1
-    else:
-        email_sending(subject, body, email)
-        return code
-
-
 def login(email, password):
     try:
-        auth.sign_in_with_email_and_password(email, password)
-        print("Login successfully")
-        return True
+        c_user = auth.sign_in_with_email_and_password(email, password)
+        infor = auth.get_account_info(c_user['idToken'])
+        for i in infor['users']:
+            if i['emailVerified']:
+                if email in list_admin:
+                    return 1
+                else:
+                    return 0
+            else:
+                return -2
     except:
-        print("Can't sign-up")
-        return False
+        return -1
 
 
 def register(email, password):
-    try:
-        auth.create_user_with_email_and_password(email, password)
-        print("Sign-up successfully")
-        return True
-    except:
-        print("Can't sign-up")
-        return False
+    user_sign_up = auth.create_user_with_email_and_password(email, password)
+    infor = auth.get_account_info(user_sign_up['idToken'])
+    for i in infor['users']:
+        return i['emailVerified']
 
-
-print(send_code('thieugiakk.hhp@gmail.com'))

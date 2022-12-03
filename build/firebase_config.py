@@ -11,13 +11,13 @@ import pyrebase
 # }
 
 firebaseConfig = {
-    'apiKey': "AIzaSyAv9z7nqC6sa87UKuU4d7AMkVG1iC3gJOA",
-    'authDomain': "upload-video-536b1.firebaseapp.com",
-    'databaseURL': "https://upload-video-536b1-default-rtdb.firebaseio.com",
-    'projectId': "upload-video-536b1",
-    'storageBucket': "upload-video-536b1.appspot.com",
-    'messagingSenderId': "717745140687",
-    'appId': "1:717745140687:web:f6603b9bd2fee68d5158ba"
+    "apiKey": "AIzaSyArOYvnhGhC97nGd39gZYYjfH1GqFwG-3Y",
+    "authDomain": "videodetect-ae8df.firebaseapp.com",
+    "databaseURL": "https://videodetect-ae8df-default-rtdb.firebaseio.com",
+    "projectId": "videodetect-ae8df",
+    "storageBucket": "videodetect-ae8df.appspot.com",
+    "messagingSenderId": "96213974195",
+    "appId": "1:96213974195:web:d7413851a7b0b6852804c6"
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)

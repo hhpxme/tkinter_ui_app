@@ -21,19 +21,8 @@ def get_video_data():
     # Iterating through the json
     # list
     for i in data['items']:
-        s1 = str(i).split(': ')
-        s2 = s1[1].split('\'')
-        name.append(s2[1])
+        s = str(i['name']).split('_')
+        name.append([i['name'], s[1], s[3].replace('.mp4', '')])
     name.sort(reverse=True)
 
-    data = []
-
-    for n in name:
-        d = n.split('_')
-        data.append([n, d[1]])
-
-    return data
-
-
-for n, d in get_video_data():
-    print(n, d)
+    return name
