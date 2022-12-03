@@ -319,7 +319,7 @@ def register_toplevel():
             else:
                 try:
                     account.register(e, p)
-                    messagebox.showwarning("Information", "A link has been sent to your email\nPlease check your email and verified your account\nIf after 15 days, account was not verified. Account is deleted")
+                    messagebox.showwarning("Information", "A link has been sent to your email\nPlease check your email and verified your account\nIf after 15 days, account was not verified. Account will be deleted")
                     messagebox.showinfo("Information", "Register Successfully")
                     toplevel.destroy()
                 except:
@@ -476,7 +476,7 @@ def login_toplevel():
                 logout_show()
                 get_video()
             elif flag == -2:
-                messagebox.showwarning("Verified Request", )
+                messagebox.showwarning("Verified Request", 'Please verified account to use app')
             elif flag == -1:
                 messagebox.showinfo("Information", "Login Failed, Please again!")
                 login_flag.set(False)

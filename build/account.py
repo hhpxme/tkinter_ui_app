@@ -47,7 +47,6 @@ def login(email, password):
 
 def register(email, password):
     user_sign_up = auth.create_user_with_email_and_password(email, password)
-    infor = auth.get_account_info(user_sign_up['idToken'])
-    for i in infor['users']:
-        return i['emailVerified']
+    auth.send_email_verification(user_sign_up["idToken"])
+
 
