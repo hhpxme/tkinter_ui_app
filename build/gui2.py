@@ -281,7 +281,8 @@ def register_toplevel():
         highlightthickness=2,
         highlightcolor="#9CD0FA",
         font=("InriaSans Regular", 24 * -1),
-        textvariable=cpw_var
+        textvariable=cpw_var,
+        show='*'
     )
     entry_repassword.place(
         x=45.0,
@@ -477,6 +478,8 @@ def login_toplevel():
                 get_video()
             elif flag == -2:
                 messagebox.showwarning("Verified Request", 'Please verified account to use app')
+                login_flag.set(False)
+                toplevel.destroy()
             elif flag == -1:
                 messagebox.showinfo("Information", "Login Failed, Please again!")
                 login_flag.set(False)
